@@ -20,13 +20,14 @@ import java.util.List;
 public class StatsController {
 
     private final StatsService service;
+    private static final String pattern = "yyyy-MM-dd HH:mm:ss";
 
 
     @GetMapping("/stats")
     public ResponseEntity<List<ViewStatsDto>> get(@RequestParam
-                                                  @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
+                                                  @DateTimeFormat(pattern = pattern) LocalDateTime start,
                                                   @RequestParam
-                                                  @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
+                                                  @DateTimeFormat(pattern = pattern) LocalDateTime end,
                                                   @RequestParam(required = false) List<String> uris,
                                                   @RequestParam(defaultValue = "false") Boolean unique) {
 

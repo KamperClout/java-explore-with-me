@@ -23,11 +23,8 @@ public class StatsServiceImpl implements StatsService {
     @Override
     public List<ViewStatsDto> get(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
         PageRequest pageable = PageRequest.of(0, 10);
-        if (unique) {
-            return ViewStatsMapper.toDtoList(repository.findUniqueViewStats(start, end, uris, pageable));
-        } else {
-            return ViewStatsMapper.toDtoList(repository.findViewStats(start, end, uris, pageable));
-        }
+        return unique ? ViewStatsMapper.toDtoList(repository.findUniqueViewStats(start, end, uris, pageable))
+                : ViewStatsMapper.toDtoList(repository.findViewStats(start, end, uris, pageable));
     }
 
     @Transactional
