@@ -30,9 +30,9 @@ public class UserControllerAdmin {
 
     @GetMapping
     public List<UserDto> getUsers(@RequestParam(defaultValue = "") List<Long> ids,
-                                  @RequestParam(required = false, defaultValue = Constants.DEFAULT_FROM)
+                                  @RequestParam(defaultValue = Constants.DEFAULT_FROM)
                                   int from,
-                                  @RequestParam(required = false, defaultValue = Constants.DEFAULT_SIZE)
+                                  @RequestParam(defaultValue = Constants.DEFAULT_SIZE)
                                   int size) {
         log.info(String.format("Получен запрос GET /admin/users на получение списка пользователей с id = %s, " +
                 "начиная с %s, по %s на странице", ids, from, size));

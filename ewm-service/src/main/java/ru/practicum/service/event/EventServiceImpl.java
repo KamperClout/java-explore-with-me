@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.common.Constants;
 import ru.practicum.common.StatsUtil;
 import ru.practicum.dto.event.*;
 import ru.practicum.dto.request.EventRequestStatusUpdateRequest;
@@ -31,7 +32,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class EventServiceImpl implements EventService {
     private final EventRepository repository;
     private final UserRepository userRepository;
@@ -209,7 +210,7 @@ public class EventServiceImpl implements EventService {
             rangeStart = LocalDateTime.now();
         }
         if (rangeEnd == null) {
-            rangeEnd = LocalDateTime.now().plusYears(100L);
+            rangeEnd = LocalDateTime.now().plusYears(Constants.RANGE_END_FOR_ALL_EVENTS);
         }
         if (rangeStart.isAfter(rangeEnd)) {
             throw new InvalidDatesException("Incorrect request: start of the event is after end of the event");

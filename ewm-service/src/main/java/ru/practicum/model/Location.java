@@ -10,9 +10,7 @@ import java.util.Objects;
 @Table(name = "locations")
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
-@ToString
+@Data
 public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
