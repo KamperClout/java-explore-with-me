@@ -1,7 +1,5 @@
 package ru.practicum.exception;
 
-import ru.practicum.mapper.DateTimeMapper;
-
 import java.time.LocalDateTime;
 
 public class ErrorResponse {
