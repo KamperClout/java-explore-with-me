@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class EventServiceImpl implements EventService {
     private final EventRepository repository;
     private final UserRepository userRepository;
@@ -42,6 +42,7 @@ public class EventServiceImpl implements EventService {
     private final StatsUtil statsUtil;
 
     @Override
+    @Transactional(readOnly = true)
     public List<EventFullDto> getEvents(List<Long> users, List<EventState> states, List<Long> categories,
                                         LocalDateTime rangeStart, LocalDateTime rangeEnd, Pageable page) {
         if (rangeStart != null && rangeEnd != null && rangeStart.isAfter(rangeEnd)) {
