@@ -2,12 +2,11 @@ package ru.practicum.mapper;
 
 import lombok.experimental.UtilityClass;
 import ru.practicum.dto.event.*;
-import ru.practicum.model.Category;
-import ru.practicum.model.Event;
-import ru.practicum.model.EventState;
-import ru.practicum.model.User;
+import ru.practicum.model.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @UtilityClass
 public class EventMapper {
@@ -30,6 +29,28 @@ public class EventMapper {
                 event.getTitle(),
                 event.getViews(),
                 event.getConfirmedRequests()
+        );
+    }
+
+    public EventFullWithCommentsDto toEventFullWithCommentsDto(Event event, List<Comment> comments) {
+        return new EventFullWithCommentsDto(
+                event.getId(),
+                event.getAnnotation(),
+                CategoryMapper.toCategoryDto(event.getCategory()),
+                event.getCreatedOn(),
+                event.getDescription(),
+                event.getEventDate(),
+                UserMapper.toUserShortDto(event.getInitiator()),
+                event.getLocation(),
+                event.getPaid(),
+                event.getParticipantLimit(),
+                event.getPublished(),
+                event.getRequestModeration(),
+                event.getState(),
+                event.getTitle(),
+                event.getViews(),
+                event.getConfirmedRequests(),
+                comments.stream().map(CommentMapper::toCommentDto).collect(Collectors.toList())
         );
     }
 

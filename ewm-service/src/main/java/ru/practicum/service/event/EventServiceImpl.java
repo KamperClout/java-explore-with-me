@@ -5,20 +5,17 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.common.Constants;
 import ru.practicum.common.StatsUtil;
 import ru.practicum.dto.event.*;
 import ru.practicum.dto.request.EventRequestStatusUpdateRequest;
 import ru.practicum.dto.request.EventRequestStatusUpdateResult;
 import ru.practicum.dto.request.ParticipationRequestDto;
-
 import ru.practicum.exceptions.DataConflictException;
-import ru.practicum.exceptions.EditNotAllowException;
 import ru.practicum.exceptions.InvalidDatesException;
+import ru.practicum.exceptions.NotAllowException;
 import ru.practicum.exceptions.NotFoundException;
 import ru.practicum.mapper.EventMapper;
 import ru.practicum.mapper.RequestMapper;
-
 import ru.practicum.model.*;
 import ru.practicum.repository.*;
 
@@ -39,10 +36,10 @@ public class EventServiceImpl implements EventService {
     private final CategoryRepository categoryRepository;
     private final RequestRepository requestRepository;
     private final LocationRepository locationRepository;
+    private final CommentRepository commentRepository;
     private final StatsUtil statsUtil;
 
     @Override
-    @Transactional(readOnly = true)
     public List<EventFullDto> getEvents(List<Long> users, List<EventState> states, List<Long> categories,
                                         LocalDateTime rangeStart, LocalDateTime rangeEnd, Pageable page) {
         if (rangeStart != null && rangeEnd != null && rangeStart.isAfter(rangeEnd)) {
@@ -67,13 +64,13 @@ public class EventServiceImpl implements EventService {
             switch (request.getStateAction()) {
                 case REJECT_EVENT:
                     if (oldEvent.getState().equals(EventState.PUBLISHED)) {
-                        throw new EditNotAllowException("Cannot reject the event because it's in the state: PUBLISHED");
+                        throw new NotAllowException("Cannot reject the event because it's in the state: PUBLISHED");
                     }
                     oldEvent.setState(EventState.CANCELED);
                     break;
                 case PUBLISH_EVENT:
                     if (!oldEvent.getState().equals(EventState.PENDING)) {
-                        throw new EditNotAllowException("Cannot publish the event because " +
+                        throw new NotAllowException("Cannot publish the event because " +
                                 "it's not in the right state: PUBLISHED");
                     }
                     oldEvent.setState(EventState.PUBLISHED);
@@ -109,11 +106,15 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventFullDto showMyEvent(Long userId, Long eventId) {
-        var user = checkUserIsExistsAndGet(userId);
+    public EventFullWithCommentsDto showMyEvent(Long userId, Long eventId) {
+        checkUserIsExistsAndGet(userId);
         var event = checkEventIsExistsAndGet(eventId);
+        if (!event.getInitiator().getId().equals(userId)) {
+            throw new NotAllowException("Information is available for initiator only");
+        }
         statsUtil.setEventViews(event);
-        return EventMapper.toEventFullDto(event);
+        var comments = commentRepository.findAllByEventId(eventId);
+        return EventMapper.toEventFullWithCommentsDto(event, comments);
     }
 
     @Override
@@ -211,7 +212,7 @@ public class EventServiceImpl implements EventService {
             rangeStart = LocalDateTime.now();
         }
         if (rangeEnd == null) {
-            rangeEnd = LocalDateTime.now().plusYears(Constants.RANGE_END_FOR_ALL_EVENTS);
+            rangeEnd = LocalDateTime.now().plusYears(100L);
         }
         if (rangeStart.isAfter(rangeEnd)) {
             throw new InvalidDatesException("Incorrect request: start of the event is after end of the event");
@@ -298,7 +299,7 @@ public class EventServiceImpl implements EventService {
 
     private void checkRequestStatus(ParticipationRequest request) {
         if (!request.getStatus().equals(RequestStatus.PENDING)) {
-            throw new EditNotAllowException("The request is not in right status: PENDING");
+            throw new NotAllowException("The request is not in right status: PENDING");
         }
     }
 }
