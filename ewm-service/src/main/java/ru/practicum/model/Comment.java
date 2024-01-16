@@ -7,13 +7,13 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 @ToString
 @NoArgsConstructor
 @Entity
 @Table(name = "comments")
 public class Comment {
-    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

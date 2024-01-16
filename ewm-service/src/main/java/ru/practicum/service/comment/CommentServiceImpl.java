@@ -3,9 +3,9 @@ package ru.practicum.service.comment;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.dto.comment.CommentDto;
 import ru.practicum.dto.comment.NewCommentDto;
-import ru.practicum.dto.comment.UpdateCommentDto;
 import ru.practicum.exceptions.NotAllowException;
 import ru.practicum.exceptions.NotFoundException;
 import ru.practicum.mapper.CommentMapper;
@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class CommentServiceImpl implements CommentService {
     private final CommentRepository repository;
     private final UserRepository userRepository;
@@ -34,16 +35,16 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDto updateComment(Long userId, Long commentId, UpdateCommentDto commentDto) {
+    public CommentDto updateComment(Long userId, Long commentId, NewCommentDto commentDto) {
         checkUserExistsAndGet(userId);
         var oldComment = checkCommentExistsAndGet(commentId);
         if (!oldComment.getAuthor().getId().equals(userId)) {
             throw new NotAllowException("You can edit your comments only");
         }
-        if (oldComment.getMeaning().equals(commentDto.getUpdateMeaning())) {
+        if (oldComment.getMeaning().equals(commentDto.getMeaning())) {
             return CommentMapper.toCommentDto(oldComment);
         }
-        oldComment.setMeaning(commentDto.getUpdateMeaning());
+        oldComment.setMeaning(commentDto.getMeaning());
         oldComment.setUpdated(LocalDateTime.now());
         return CommentMapper.toCommentDto(repository.save(oldComment));
     }

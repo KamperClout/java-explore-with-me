@@ -6,7 +6,6 @@ import ru.practicum.model.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @UtilityClass
 public class EventMapper {
@@ -50,7 +49,7 @@ public class EventMapper {
                 event.getTitle(),
                 event.getViews(),
                 event.getConfirmedRequests(),
-                comments.stream().map(CommentMapper::toCommentDto).collect(Collectors.toList())
+                comments.stream().map(CommentMapper::toCommentDto).count()
         );
     }
 

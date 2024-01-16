@@ -8,7 +8,6 @@ import ru.practicum.common.Constants;
 import ru.practicum.common.PaginationUtil;
 import ru.practicum.dto.comment.CommentDto;
 import ru.practicum.dto.comment.NewCommentDto;
-import ru.practicum.dto.comment.UpdateCommentDto;
 import ru.practicum.service.comment.CommentService;
 
 import javax.validation.Valid;
@@ -35,7 +34,7 @@ public class CommentControllerPrivate {
 
     @PatchMapping(path = "/{commentId}")
     public CommentDto patchComment(@PathVariable Long userId, @PathVariable Long commentId,
-                                   @Valid @RequestBody UpdateCommentDto commentDto) {
+                                   @Valid @RequestBody NewCommentDto commentDto) {
         log.info(String.format(
                 "Получен запрос PATCH /users/{userId} = %s/comments/{commentId} = %s на изменение комментария",
                 userId, commentId));

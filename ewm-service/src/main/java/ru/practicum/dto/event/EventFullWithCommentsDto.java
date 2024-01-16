@@ -12,13 +12,13 @@ import java.util.List;
 
 @Getter
 public class EventFullWithCommentsDto extends EventFullDto {
-    List<CommentDto> comments;
+    long comments;
 
     public EventFullWithCommentsDto(Long id, String annotation, CategoryDto category, LocalDateTime createdOn,
                                     String description, LocalDateTime eventDate, UserShortDto initiator,
                                     Location location, Boolean paid, Integer participantLimit,
                                     LocalDateTime publishedOn, Boolean requestModeration, EventState state,
-                                    String title, Long views, Integer confirmedRequests, List<CommentDto> comments) {
+                                    String title, Long views, Integer confirmedRequests, long comments) {
         super(id, annotation, category, createdOn, description, eventDate, initiator, location, paid, participantLimit,
                 publishedOn, requestModeration, state, title, views, confirmedRequests);
         this.comments = comments;
