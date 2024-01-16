@@ -2,13 +2,11 @@ package ru.practicum.dto.event;
 
 import lombok.Getter;
 import ru.practicum.dto.category.CategoryDto;
-import ru.practicum.dto.comment.CommentDto;
 import ru.practicum.dto.user.UserShortDto;
 import ru.practicum.model.EventState;
 import ru.practicum.model.Location;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 public class EventFullWithCommentsDto extends EventFullDto {
