@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 
 @RestControllerAdvice
@@ -19,6 +20,13 @@ public class ExceptionHandlerController {
     public ApiError handleNotFoundException(NotFoundException e) {
         return new ApiError("NOT_FOUND", "Please check your request", e.getMessage(), LocalDateTime.now());
     }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError constraintViolationException(ConstraintViolationException e) {
+        return new ApiError("BAD_REQUEST", "Please check your request", e.getMessage(), LocalDateTime.now());
+    }
+
 
     @ExceptionHandler///?????
     @ResponseStatus(HttpStatus.CONFLICT)
@@ -35,7 +43,7 @@ public class ExceptionHandlerController {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ApiError handleEditNotAllowException(EditNotAllowException e) {
+    public ApiError handleNotAllowException(NotAllowException e) {
         return new ApiError("FORBIDDEN", "For the requested operation the conditions are not met.",
                 e.getMessage(), LocalDateTime.now());
     }

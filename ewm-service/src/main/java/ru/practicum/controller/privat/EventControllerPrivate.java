@@ -6,10 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.common.Constants;
 import ru.practicum.common.PaginationUtil;
-import ru.practicum.dto.event.EventFullDto;
-import ru.practicum.dto.event.EventShortDto;
-import ru.practicum.dto.event.NewEventDto;
-import ru.practicum.dto.event.UpdateEventUserRequest;
+import ru.practicum.dto.event.*;
 import ru.practicum.dto.request.EventRequestStatusUpdateRequest;
 import ru.practicum.dto.request.EventRequestStatusUpdateResult;
 import ru.practicum.dto.request.ParticipationRequestDto;
@@ -45,7 +42,7 @@ public class EventControllerPrivate {
     }
 
     @GetMapping("/{eventId}")
-    public EventFullDto showMyEventFull(@PathVariable Long userId, @PathVariable Long eventId) {
+    public EventFullWithCommentsDto showMyEventFull(@PathVariable Long userId, @PathVariable Long eventId) {
         log.info(String.format("Получен запрос GET /users/{userId} = %s/events/{eventId} = %s " +
                 "на просмотр полной информации о событии", userId, eventId));
         return service.showMyEvent(userId, eventId);
